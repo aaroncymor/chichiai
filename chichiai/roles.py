@@ -1,9 +1,13 @@
 from abc import ABC, abstractmethod
+
+# custom
 from exceptions import MethodNotImplementedError
-from settings.config import *
+from settings.config import OPENAI_API_KEY
+from prompts import *
 
 
-class BaseRoleFinder(object):
+class BaseRoleFinder(ABC):
+
     def __init__(self, llm):
         self.llm = llm
 
@@ -33,8 +37,24 @@ class BaseRoleFinder(object):
 
 
 class ExpertFinder(BaseRoleFinder):
-    pass
+    """"""
+
+    def find_role(self):
+        return "find_role"
+
+    def _extract_role(self):
+        return "_extract_role"
 
 
 class AnalystFinder(BaseRoleFinder):
-    pass
+    """"""
+
+    def find_role(self):
+        return "find_role"
+
+    def _extract_role(self):
+        return "_extract_role"
+
+
+if __name__ == "__main__":
+    ef = ExpertFinder()
