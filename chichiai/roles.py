@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 # custom
 from exceptions import MethodNotImplementedError
 from settings.config import OPENAI_API_KEY
+from utils import reg_ex as regex
 from prompts import *
 
 
@@ -24,7 +25,7 @@ class BaseRoleFinder(ABC):
         raise MethodNotImplementedError("Select role method has not been implemented")
 
     @abstractmethod
-    def _extract_role(self):
+    def _extract_role(self, response:str) -> str:
         """
         Extract the role based on llm response
 
@@ -42,8 +43,8 @@ class ExpertFinder(BaseRoleFinder):
     def find_role(self):
         return "find_role"
 
-    def _extract_role(self):
-        return "_extract_role"
+    def _extract_role(self, response:str) -> str:
+        return regex._extract_expert(response)
 
 
 class AnalystFinder(BaseRoleFinder):
@@ -52,9 +53,9 @@ class AnalystFinder(BaseRoleFinder):
     def find_role(self):
         return "find_role"
 
-    def _extract_role(self):
-        return "_extract_role"
+    def _extract_role(self, response):
+        return regex._extract_analyst(response)
 
 
 if __name__ == "__main__":
-    ef = ExpertFinder()
+    ef = ExpertFinder("test")
