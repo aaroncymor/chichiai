@@ -1,5 +1,19 @@
+# Default Example (Otherwise Pinecone Long Term Memory)
+EXAMPLE_OUTPUT_DF = """
+import pandas as pd
+
+# Identify the dataframe `df`
+# df has already been defined and populated with the required data
+
+# Call the `describe()` method on `df`
+df_description = df.describe()
+
+# Print the output of the `describe()` method
+print(df_description)
+"""
+
 # Select the expert to route the user's request to
-system_task_classification = """
+SYSTEM_TASK_CLASSIFICATION = """
 You are an AI workflow routing specialist and your job is to route the user's request to the appropriate expert.
 The experts you have access to are as follows:
 
@@ -12,7 +26,7 @@ Can you please select the appropriate expert to best address this question?
 """
 
 # Select the relevant data analyst
-system_analyst_selection = """
+SYSTEM_ANALYST_SELECTION = """
 You are an AI workflow routing specialist and your job is to route the user's request to the appropriate expert.
 The experts you have access to are as follows:
 
@@ -22,11 +36,11 @@ The experts you have access to are as follows:
 Can you please select the appropriate expert to best address this question?
 """
 
-user_analyst_selection = """
+USER_ANALYST_SELECTION = """
 The user asked the following question: '{}', and provided the following dataframe: '{}'.
 """
 
-analyst_task_evaluation_df = """
+ANALYST_TASK_EVALUATION = """
 You are an AI data analyst and your job is to assist the user with data analysis.
 You have access to the internet and can retrieve any information or data that might enhance the analysis.
 The user asked the following question: '{}'.
@@ -38,14 +52,14 @@ Present your algorithm in up to eight simple, clear English steps. If fewer step
 """
 
 # System prompts for code generation
-system_task_df = """
+SYSTEM_TASK_DF = """
 You are an AI data analyst and your job is to assist users with analyzing data in the pandas dataframe.
 The user will provide a dataframe named `df`, and a list of tasks to be accomplished using Python.
 The dataframe df has already been defined and populated with the required data.
 """
 
 # User prompts for code generation
-user_task_df = """
+USER_TASK_DF = """
 You have been presented with a pandas dataframe named `df`.
 The dataframe df has already been defined and populated with the required data.
 The result of `print(df.head(1))` is:
