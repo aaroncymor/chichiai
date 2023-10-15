@@ -1,24 +1,16 @@
 from abc import ABC, abstractmethod
 
-
-class MethodNotImplementedError(Exception):
-    """
-    Raised when a method is not implemented.
-
-    Args:
-        Exception (Exception): MethodNotImplementedError
-    """
-    pass
+from ..exceptions import MethodNotImplementedError
 
 
 class BaseRoleFinder(ABC):
     """"""
 
-    def __init__(self):
-        pass
+    def __init__(self, llm):
+        self.llm = llm
 
     @abstractmethod
-    def find_role(self):
+    def find_role(self) -> str:
         """
         Select the role based on llm response
 
@@ -27,10 +19,11 @@ class BaseRoleFinder(ABC):
         Raises:
             MethodNotImplementedError: Select role method has not been implemented
         """
-        raise MethodNotImplementedError("Select role method has not been implemented")
+        raise MethodNotImplementedError(
+            "Select role method has not been implemented")
 
     @abstractmethod
-    def _extract_role(self, response: str) -> str:
+    def _extract_role(self, response: str, pattern: str) -> str:
         """
         Extract the role based on llm response
 
@@ -39,4 +32,5 @@ class BaseRoleFinder(ABC):
         Raises:
             MethodNotImplementedError: Select role method has not been implemented
         """
-        raise MethodNotImplementedError("Select role method has not been implemented")
+        raise MethodNotImplementedError(
+            "Select role method has not been implemented")
