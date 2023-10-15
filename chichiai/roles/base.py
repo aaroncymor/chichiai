@@ -8,13 +8,14 @@ class MethodNotImplementedError(Exception):
     Args:
         Exception (Exception): MethodNotImplementedError
     """
+    pass
 
 
 class BaseRoleFinder(ABC):
     """"""
 
-    def __init__(self, llm):
-        self.llm = llm
+    def __init__(self):
+        pass
 
     @abstractmethod
     def find_role(self):
