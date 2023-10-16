@@ -10,12 +10,12 @@ class BaseRoleFinder(ABC):
         self.llm = llm
 
     @abstractmethod
-    def find_role(self) -> str:
+    def find_role(self, question: str, *args, **kwargs) -> str:
         """
         Select the role based on llm response
 
         Args:
-
+            messages (list): List of messages accepted by langchain
         Raises:
             MethodNotImplementedError: Select role method has not been implemented
         """

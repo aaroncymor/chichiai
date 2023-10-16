@@ -1,3 +1,3 @@
-from .finder import AnalystFinder, ExpertFinder
+from .finders import AnalystFinder, ExpertFinder
 
 
