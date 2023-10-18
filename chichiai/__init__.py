@@ -17,6 +17,7 @@ from chichiai.prompts import (
     SYSTEM_TASK_DF, USER_TASK_DF
 )
 from chichiai.exceptions import EnvironmentError, UnsupportedModelError
+from chichiai.utils import _extract_code
 
 warnings.filterwarnings('ignore')
 
@@ -81,14 +82,34 @@ class ChiChiAI(object):
             print("ANALYST", analyst)
             print("SYSTEM ANALYST MESSAGES", system_analyst_messages)
             if analyst == "Data Analyst DF":
+                # begin generate tasks
                 eval_messages = [
                     SystemMessage(content=SYSTEM_TASK_EVALUATION),
                     HumanMessagePromptTemplate.from_template(
                         ANALYST_TASK_EVALUATION_DF)
                 ]
                 template = ChatPromptTemplate.from_messages(eval_messages)
+                # generate tasks or step by step python code to run
                 response = self.llm(template.format_messages(
                     question=question,
                     dataframe=dataframe_head
                 ))
-                print("RESPONSE CONTENT TASKS", response.content)
+                tasks = response.content
+                print("GENERATED TASKS", tasks)
+
+                # begin generate code
+                code_messages = [
+                    SystemMessage(content=SYSTEM_TASK_DF),
+                    HumanMessagePromptTemplate.from_template(USER_TASK_DF)
+                ]
+                template = ChatPromptTemplate.from_messages(code_messages)
+                response = self.llm(template.format_messages(
+                    dataframe=dataframe_head,
+                    tasks=tasks,
+                    example_output=EXAMPLE_OUTPUT_DF
+                ))
+                generated_code = response.content
+                print("GENERATED CODE", generated_code)
+                code = _extract_code(generated_code, "DATA_ANALYST_DF", None)
+                print("EXTRACTED CODE", code)
+
