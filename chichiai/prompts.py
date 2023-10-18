@@ -41,8 +41,8 @@ USER_TASK_DF = """
 You have been presented with a pandas dataframe named `df`.
 The dataframe df has already been defined and populated with the required data.
 The result of `print(df.head(1))` is:
-{}.
-Return the python code that accomplishes the following tasks: {}.
+{dataframe}.
+Return the python code that accomplishes the following tasks: {tasks}.
 Approach each task from the list in isolation, advancing to the next only upon its successful resolution.
 Strictly adhere to the prescribed instructions to avoid oversights and ensure an accurate solution.
 Always include the import statements at the top of the code.
@@ -51,6 +51,6 @@ Always use the backticks to enclose the code.
 
 Example Output:
 ```python
-{}
+{example_output}
 ```
 """
