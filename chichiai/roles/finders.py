@@ -30,7 +30,8 @@ class ExpertFinder(BaseRoleFinder):
         return None
 
     def find_role(self, question: str) -> str:
-        OutputManager.display_tool_start(self.agent, "Test")
+        # OutputManager.display_tool_start(self.agent, "gpt-4-0613")
+        OutputManager.display_tool_start(self.agent)
         pre_eval_messages = [
             SystemMessage(content=SYSTEM_TASK_CLASSIFICATION),
             HumanMessagePromptTemplate.from_template("{question}")
@@ -44,6 +45,7 @@ class ExpertFinder(BaseRoleFinder):
 
 class AnalystFinder(BaseRoleFinder):
     """"""
+    agent = "Analyst Selector"
 
     def _extract_role(self, response: str, pattern: str) -> str:
         # Create a pattern to match any of the substrings

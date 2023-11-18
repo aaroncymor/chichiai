@@ -1,4 +1,3 @@
-
 from termcolor import cprint
 from IPython.display import display, HTML
 import sys
@@ -61,8 +60,9 @@ class OutputManager:
                 cprint(f"\n>> Solution Rank:", COLOR_RESULT_HEADER_CLI, attrs=['bold'])
                 print_wrapper(rank)
 
+    # def display_tool_start(tool, model):
     @staticmethod
-    def display_tool_start(tool, model):
+    def display_tool_start(tool):
         if tool == 'Planner':
             msg = 'Drafting a plan to provide a comprehensive answer, please wait...'
         elif tool == 'Expert Selector':
@@ -75,10 +75,10 @@ class OutputManager:
             msg = 'I am going to assess, summarize and rank the answer, please wait...'
 
         if 'ipykernel' in sys.modules:
-            display(HTML(f'<p style="color:{COLOR_TOOL_HEADERK};">\nCalling Model: {model}</p>'))
+            # display(HTML(f'<p style="color:{COLOR_TOOL_HEADER};">\nCalling Model: {model}</p>'))
             display(HTML(f'<p><b style="color:{COLOR_TOOL_HEADER};">{msg}</b></p><br>'))
         else:
-            cprint(f"\n>> Calling Model: {model}", COLOR_TOOL_HEADER)
+            # cprint(f"\n>> Calling Model: {model}", COLOR_TOOL_HEADER)
             cprint(f"\n>> {msg}\n", COLOR_TOOL_HEADER, attrs=['bold'])
 
     @staticmethod
