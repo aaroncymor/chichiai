@@ -11,7 +11,6 @@ from langchain.prompts.chat import SystemMessage, AIMessage, HumanMessagePromptT
 
 from chichiai.roles import AnalystFinder, ExpertFinder
 from chichiai.settings import OPENAI_API_KEY
-from chichiai.output_manager import OutputManager
 from chichiai.prompts import (
     EXAMPLE_OUTPUT_DF, SYSTEM_TASK_EVALUATION, ANALYST_TASK_EVALUATION_DF,
     SYSTEM_TASK_DF, USER_TASK_DF
@@ -29,17 +28,21 @@ SUPPORTED_CHAT_MODELS = {
     'gpt-4-0613',
 }
 
+class TaskMaster(object):
+    pass
+
 
 class ChiChiAI(object):
     """"""
 
     def __init__(self,
                  df: pd.DataFrame = None,
-                 llm: str = "gpt-3.5-turbo-0613",
+                 llm: str = "gpt-4-0613",
                  max_conversations: int = 4,
                  exploratory: bool = True):
 
-        self.df = df
+        # Dataframe
+        self.df = df if df is not None else None
 
         # chat model only supported at the moment
         all_supported_models = SUPPORTED_CHAT_MODELS
@@ -64,7 +67,6 @@ class ChiChiAI(object):
         # instantiate classes
         self.analyst_finder = AnalystFinder(self.llm)
         self.expert_finder = ExpertFinder(self.llm)
-        self.output_manager = OutputManager()
 
         self.max_error_corrections = 5
         self.max_conversations = max_conversations
@@ -86,14 +88,17 @@ class ChiChiAI(object):
                 eval_messages = [
                     SystemMessage(content=SYSTEM_TASK_EVALUATION),
                     HumanMessagePromptTemplate.from_template(
-                        ANALYST_TASK_EVALUATION_DF)
+                        ANALYST_TASK_EVALUATION_DF
+                    )
                 ]
                 template = ChatPromptTemplate.from_messages(eval_messages)
+
                 # generate tasks or step by step python code to run
                 response = self.llm(template.format_messages(
                     question=question,
                     dataframe=dataframe_head
                 ))
+
                 tasks = response.content
                 print("GENERATED TASKS", tasks)
 
@@ -112,4 +117,3 @@ class ChiChiAI(object):
                 print("GENERATED CODE", generated_code)
                 code = _extract_code(generated_code, "DATA_ANALYST_DF", None)
                 print("EXTRACTED CODE", code)
-

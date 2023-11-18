@@ -10,10 +10,12 @@ from .prompts import (
     SYSTEM_TASK_CLASSIFICATION, SYSTEM_ANALYST_SELECTION,
     USER_ANALYST_SELECTION
 )
+from ..utils import OutputManager
 
 
 class ExpertFinder(BaseRoleFinder):
     """"""
+    agent = "Expert Selector"
 
     def _extract_role(self, response: str, pattern: str) -> str:
 
@@ -24,11 +26,11 @@ class ExpertFinder(BaseRoleFinder):
         if match:
             # If a match is found, return it
             return match.group()
-        else:
-            # If no match is found, return None
-            return None
+        # If no match is found, return None
+        return None
 
     def find_role(self, question: str) -> str:
+        OutputManager.display_tool_start(self.agent, "Test")
         pre_eval_messages = [
             SystemMessage(content=SYSTEM_TASK_CLASSIFICATION),
             HumanMessagePromptTemplate.from_template("{question}")
@@ -51,13 +53,11 @@ class AnalystFinder(BaseRoleFinder):
         if match:
             # If a match is found, return it
             return match.group()
-        else:
-            # If no match is found, return None
-            return None
+        # If no match is found, return None
+        return None
 
     def find_role(self, question: str, dataframe: pd.DataFrame) -> str:
         columns = dataframe.columns.tolist()
-        print("COLS", columns)
         select_analyst_messages = [
             SystemMessage(content=SYSTEM_ANALYST_SELECTION),
             HumanMessagePromptTemplate.from_template(USER_ANALYST_SELECTION),
