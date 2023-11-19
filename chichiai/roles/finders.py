@@ -4,7 +4,7 @@ import pandas as pd
 from langchain.prompts import ChatPromptTemplate
 from langchain.prompts.chat import SystemMessage, AIMessage, HumanMessagePromptTemplate
 
-from .base import BaseRoleFinder
+from .mixins import FinderMixin
 from .patterns import EXPERT_FINDER_PATTERN, ANALYST_FINDER_PATTERN
 from .prompts import (
     SYSTEM_TASK_CLASSIFICATION, SYSTEM_ANALYST_SELECTION,
@@ -13,12 +13,11 @@ from .prompts import (
 from ..utils import OutputManager
 
 
-class ExpertFinder(BaseRoleFinder):
+class ExpertFinder(FinderMixin):
     """"""
     agent = "Expert Selector"
 
     def _extract_role(self, response: str, pattern: str) -> str:
-
         # Create a pattern to match any of the substrings
         # Use re.search to find the first match in the input string
         match = re.search(pattern, response)
@@ -30,20 +29,18 @@ class ExpertFinder(BaseRoleFinder):
         return None
 
     def find_role(self, question: str) -> str:
-        # OutputManager.display_tool_start(self.agent, "gpt-4-0613")
-        OutputManager.display_tool_start(self.agent)
-        pre_eval_messages = [
+        self.pre_eval_messages = [
             SystemMessage(content=SYSTEM_TASK_CLASSIFICATION),
             HumanMessagePromptTemplate.from_template("{question}")
         ]
         template = ChatPromptTemplate.from_messages(pre_eval_messages)
         response = self.llm(template.format_messages(question=question))
         expert = self._extract_role(response.content, EXPERT_FINDER_PATTERN)
-        pre_eval_messages.append(AIMessage(content=expert))
-        return expert, pre_eval_messages
+        self.pre_eval_messages.append(AIMessage(content=expert))
+        return expert
 
 
-class AnalystFinder(BaseRoleFinder):
+class AnalystFinder(FinderMixin):
     """"""
     agent = "Analyst Selector"
 
@@ -60,7 +57,7 @@ class AnalystFinder(BaseRoleFinder):
 
     def find_role(self, question: str, dataframe: pd.DataFrame) -> str:
         columns = dataframe.columns.tolist()
-        select_analyst_messages = [
+        self.select_analyst_messages = [
             SystemMessage(content=SYSTEM_ANALYST_SELECTION),
             HumanMessagePromptTemplate.from_template(USER_ANALYST_SELECTION),
         ]
@@ -68,5 +65,5 @@ class AnalystFinder(BaseRoleFinder):
         response = self.llm(template.format_messages(question=question,
                                                      dataframe=columns))
         analyst = self._extract_role(response.content, ANALYST_FINDER_PATTERN)
-        select_analyst_messages.append(AIMessage(content=analyst))
-        return analyst, select_analyst_messages
+        self.select_analyst_messages.append(AIMessage(content=analyst))
+        return analyst

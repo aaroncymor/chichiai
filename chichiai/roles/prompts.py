@@ -1,3 +1,9 @@
+PLANNER_SYSTEM = """
+You are an AI assistant capable of assisting users with various tasks related to research, coding, and data analysis.
+The user will inform you about the expertise required to accomplish their task.
+Always approach each task within the context of previous conversations.
+"""
+
 # Select the expert to route the user's request to
 SYSTEM_TASK_CLASSIFICATION = """
 You are an AI workflow routing specialist and your job is to route the user's request to the appropriate expert.

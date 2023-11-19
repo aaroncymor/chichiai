@@ -1,9 +1,31 @@
 from abc import ABC, abstractmethod
 
-from ..exceptions import MethodNotImplementedError
+
+class EvaluateTaskMixin(ABC):
+    """"""
+    pass
 
 
-class BaseRoleFinder(ABC):
+class ManageCodeMixin(ABC):
+    """"""
+
+    @abstractmethod
+    def generate_code(self):
+        """"""
+        raise NotImplementedError
+
+    @abstractmethod
+    def extract_code(self):
+        """"""
+        raise NotImplementedError
+
+    @abstractmethod
+    def execute_code(self):
+        """"""
+        raise NotImplementedError
+
+
+class FinderMixin(ABC):
     """"""
 
     def __init__(self, llm):
@@ -19,8 +41,7 @@ class BaseRoleFinder(ABC):
         Raises:
             MethodNotImplementedError: Select role method has not been implemented
         """
-        raise MethodNotImplementedError(
-            "Select role method has not been implemented")
+        raise NotImplementedError
 
     @abstractmethod
     def _extract_role(self, response: str, pattern: str) -> str:
@@ -32,5 +53,4 @@ class BaseRoleFinder(ABC):
         Raises:
             MethodNotImplementedError: Select role method has not been implemented
         """
-        raise MethodNotImplementedError(
-            "Select role method has not been implemented")
+        raise NotImplementedError
