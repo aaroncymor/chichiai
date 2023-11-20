@@ -1,21 +1,15 @@
 from abc import ABC, abstractmethod
 
 
-class EvaluateTaskMixin(ABC):
-    """"""
-    pass
-
-
 class ManageCodeMixin(ABC):
     """"""
-
     @abstractmethod
     def generate_code(self):
         """"""
         raise NotImplementedError
 
     @abstractmethod
-    def extract_code(self):
+    def _extract_code(self):
         """"""
         raise NotImplementedError
 
@@ -24,8 +18,13 @@ class ManageCodeMixin(ABC):
         """"""
         raise NotImplementedError
 
+    @abstractmethod
+    def debug_code(self):
+        """"""
+        raise NotImplementedError
 
-class FinderMixin(ABC):
+
+class FindRoleMixin(ABC):
     """"""
 
     def __init__(self, llm):
@@ -39,7 +38,7 @@ class FinderMixin(ABC):
         Args:
             messages (list): List of messages accepted by langchain
         Raises:
-            MethodNotImplementedError: Select role method has not been implemented
+            NotImplementedError: Select role method has not been implemented
         """
         raise NotImplementedError
 
@@ -51,6 +50,6 @@ class FinderMixin(ABC):
         Args:
 
         Raises:
-            MethodNotImplementedError: Select role method has not been implemented
+            NotImplementedError: Select role method has not been implemented
         """
         raise NotImplementedError
