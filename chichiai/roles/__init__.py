@@ -61,10 +61,7 @@ class TaskMaster:
         if expert == "Data Analyst":
             print("Expert is Data Analyst")
             code_messages = []
-            analyst, select_analyst_messages = self._find_analyst(question)
-
-            # assign updated select_analyst_messages
-            self.select_analyst_messages = select_analyst_messages
+            analyst = self._find_analyst(question)
 
             print("Finding Analyst")
             if analyst == "Data Analyst DF":
@@ -92,8 +89,10 @@ class TaskMaster:
         ]
         analyst, select_analyst_messages = self.analyst_finder.find_role(
             question, select_analyst_messages, self.df)
-        # updated select_analyst_messages
-        return (analyst, select_analyst_messages)
+
+        # assign updated select_analyst_messages
+        self.select_analyst_messages = select_analyst_messages
+        return analyst
 
     def evaluate_task(self, question: str):
         """"""
