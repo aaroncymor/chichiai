@@ -83,3 +83,4 @@ class ChiChiAI(object):
         # next steps 1: implement generate_code, extract_code, and execute_code
         # next steps 2: look into memory and how to apply this with the TaskMaster
         # https://sonery.medium.com/the-memory-component-of-langchain-for-chatgpt-conversations-8f42a4e9db5b
+        # https://sonery.medium.com/4-memory-types-of-langchain-to-enhance-the-performance-of-llms-bda339d2e904
