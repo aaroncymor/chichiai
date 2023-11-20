@@ -38,19 +38,22 @@ class TaskMaster:
         self.df = df
         self.expert_finder = ExpertFinder(llm)
         self.analyst_finder = AnalystFinder(llm)
+        self.llm = llm
         self.search_tool = search_tool
 
     def _find_expert(self, question: str):
+        # declare pre_eval_messages
         pre_eval_messages = [
             SystemMessage(content=SYSTEM_TASK_CLASSIFICATION)
         ]
 
-        expert, messages = self.expert_finder.find_role(
+        expert, pre_eval_messages = self.expert_finder.find_role(
             question, pre_eval_messages)
 
-        # updated pre_eval_messages from expert finder
-        self.pre_eval_messages = messages
+        # assign updated pre_eval_messages
+        self.pre_eval_messages = pre_eval_messages
 
+        # declare eval_messages
         eval_messages = [
             SystemMessage(content=SYSTEM_TASK_EVALUATION),
         ]
@@ -58,7 +61,10 @@ class TaskMaster:
         if expert == "Data Analyst":
             print("Expert is Data Analyst")
             code_messages = []
-            analyst = self._find_analyst(question)
+            analyst, select_analyst_messages = self._find_analyst(question)
+
+            # assign updated select_analyst_messages
+            self.select_analyst_messages = select_analyst_messages
 
             print("Finding Analyst")
             if analyst == "Data Analyst DF":
@@ -67,7 +73,6 @@ class TaskMaster:
 
             if analyst == "Data Analyst Generic":
                 print("Analyst is Data Analyst Generic")
-                return DataAnalystDataFrame(eval_messages, code_messages)
                 return DataAnalystGeneric(eval_messages, code_messages)
 
         if expert == "Data Analysis Theorist":
@@ -85,22 +90,38 @@ class TaskMaster:
         select_analyst_messages = [
             SystemMessage(content=SYSTEM_ANALYST_SELECTION)
         ]
-        analyst, messages = self.analyst_finder.find_role(
+        analyst, select_analyst_messages = self.analyst_finder.find_role(
             question, select_analyst_messages, self.df)
         # updated select_analyst_messages
-        self.select_analyst_messages = messages
-        return analyst
+        return (analyst, select_analyst_messages)
 
     def evaluate_task(self, question: str):
         """"""
         expert = self._find_expert(question)
-        # get eval messages from expert
-        self.eval_messages = expert.eval_messages
-        print("Expert eval messages", self.eval_messages)
-        agent = expert.agent
-        print("Expert agent", agent)
 
-        # if expert is analyst, get code messages
+        # get eval messages from expert
+        eval_messages = expert.eval_messages
+        print("Eval messages", eval_messages)
+        template = ChatPromptTemplate.from_messages(eval_messages)
+
+        tasks = None
+        print("Evaluating tasks")
         if expert.is_analyst:
+            print("Evaluating analyst task")
+            response = self.llm(template.format_messages(
+                question=question,
+                dataframe=self.df.head(1)
+            ))
+            tasks = response.content
+            eval_messages.append(AIMessage(content=response.content))
+
+            # assign new code_messages
             self.code_messages = expert.code_messages
-            print("Expert code messages", self.code_messages)
+        else:
+            print("Evaluating expert task")
+            response = self.llm(template.format(question=question))
+            eval_messages.append(AIMessage(content=response.content))
+
+        # assign updated eval_messages
+        self.eval_messages = eval_messages
+        return tasks
