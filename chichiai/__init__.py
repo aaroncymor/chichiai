@@ -85,3 +85,4 @@ class ChiChiAI(object):
         # https://sonery.medium.com/the-memory-component-of-langchain-for-chatgpt-conversations-8f42a4e9db5b
         # https://sonery.medium.com/4-memory-types-of-langchain-to-enhance-the-performance-of-llms-bda339d2e904
         # https://python.langchain.com/docs/modules/memory/adding_memory
+        # https://www.youtube.com/watch?v=dxO6pzlgJiY
